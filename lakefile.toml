@@ -1,0 +1,35 @@
+name = "ReinmannPalomar"
+version = "0.1.0"
+keywords = ["math"]
+defaultTargets = ["Challenge", "Solution"]
+
+[leanOptions]
+pp.unicode.fun = true
+relaxedAutoImplicit = false
+maxSynthPendingDepth = 3
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4.git"
+rev = "v4.35.0-rc2"
+
+# Analytic and certified-arithmetic support, vendored from
+# sciencenerd-des/reinmann@a8455dcf978424a7487048f114df3c66552d6f6a
+# (only the import closure of XiRectangle.Final).
+[[lean_lib]]
+name = "Reinmann"
+globs = ["Reinmann.+"]
+
+# The 44-tile numerical certificate for the rectangle.
+[[lean_lib]]
+name = "XiRectangle"
+globs = ["XiRectangle.+"]
+moreLeanArgs = ["-j3"]
+
+[[lean_lib]]
+name = "Challenge"
+roots = ["Challenge"]
+
+[[lean_lib]]
+name = "Solution"
+roots = ["Solution"]

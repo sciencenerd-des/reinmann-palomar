@@ -1,0 +1,137 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+# formalization.yaml v0.4 for the Palomar submission of the low-height
+# xi rectangle certificate.
+version: "v0.4"
+
+project:
+  name: "Lean certificate: Riemann's xi has no zero in 0 <= Re s <= 1, |Im s| <= 14.1"
+  description: >-
+    A Lean 4 / Mathlib proof that Riemann's entire xi function,
+    written with Mathlib's entire completed zeta function as
+    xi(s) = 1/2 + s(s-1)/2 * completedRiemannZeta₀(s), has no zero in the
+    closed rectangle 0 <= Re s <= 1, |Im s| <= 141/10, and the corollary that
+    Mathlib's riemannZeta has no zero with 0 < Re s < 1 and |Im s| <= 141/10.
+
+    Compared theorems. ReinmannPalomar.xi_ne_zero_low_rectangle states the xi
+    statement for every complex s in the closed rectangle (boundary lines
+    Re s = 0 and Re s = 1 included; at s = 0 and s = 1 the expression equals
+    1/2). ReinmannPalomar.riemannZeta_ne_zero_low_strip states the zeta
+    statement on the open strip only; Mathlib's riemannZeta takes an
+    unrelated junk value at the pole s = 1 and the closed lines are not
+    claimed for zeta. Both statements use only Mathlib definitions; the
+    Challenge introduces no definitions.
+
+    Method. The quarter rectangle 1/2 <= Re s <= 1, 0 <= Im s <= 141/10 is
+    covered by 44 closed rational balls (a finite grid coverage proof checks
+    the cover). On each ball the proof builds a degree-12 rational complex
+    Taylor model of xi with proved coefficient error radii, assembled from
+    finite exponential and logarithmic enclosures, a shifted Gamma
+    approximation with its analytic remainder, and an Euler-Maclaurin zeta
+    approximation with its remainder; the pole at s = 1 is removed in the
+    assembled entire function. A rational lower bound for |xi(c)| at the
+    centre that exceeds r times a proved bound for |xi'| on the ball gives
+    nonvanishing on the ball. Every rounding check is a rational inequality
+    proved in the Lean kernel; no native_decide, Lean.ofReduceBool or custom
+    axiom is used. Reflection s -> 1 - s and conjugation extend the quarter
+    to the full rectangle. The zeta corollary uses that a zero of zeta in
+    the open strip is a zero of xi, because the archimedean factor
+    pi^(-s/2) Gamma(s/2) does not vanish there.
+
+    Limitations and scope. This is a formal certificate of a classical,
+    long-known fact: the first nontrivial zero of zeta has ordinate
+    14.1347..., and Platt and Trudgian rigorously verified the Riemann
+    hypothesis up to height 3*10^12. The result gives no new information
+    about the zeros of zeta and is not a proof, or a step towards a proof,
+    of the Riemann hypothesis. Its interest is as an auditable, kernel-checked
+    numerical certificate for an analytic special function inside Mathlib's
+    own definitions (Gamma, completed zeta), which is a prerequisite for
+    unconditional finite-order Polya-frequency statements for the folded xi
+    coefficients developed in the source repository (ranks 43, 58 and 97);
+    those finite-order statements are not compared in this submission.
+
+    Provenance. The proof was developed in sciencenerd-des/reinmann at commit
+    a8455dcf978424a7487048f114df3c66552d6f6a (Lean v4.30.0, Mathlib commit c5ea00351c28e24afc9f0f84379aa41082b1188f).
+    This repository vendors only the import closure of XiRectangle.Final
+    (365 files), ported to Lean's module system and to Lean v4.35.0-rc2 /
+    Mathlib v4.35.0-rc2 by mechanical rewrites plus a small number of local
+    proof repairs for library drift, all listed in PORTING.md; no statement
+    was changed. Challenge.lean and Solution.lean are new. The author used AI assistance (large-language-model coding agents)
+    for proof development, the generation of the tile certificates and their
+    Lean files, the module-system port, and manuscript and metadata
+    preparation; the author directed the work and is responsible for it. No
+    external human has reviewed the Lean development.
+
+    Licence. Apache-2.0, as stated in every source header and the root
+    LICENSE file.
+  authors:
+    - "Biswajit Mondal"
+  license: "Apache-2.0"
+  responsible_maintainers:
+    - "Biswajit Mondal"
+
+classification:
+  arxiv: ["math.NT", "cs.LO"]
+  msc2020: ["11M06", "11M26", "11Y35", "65G40", "03B35"]
+
+automation:
+  methods:
+    - method: agent
+      # TODO(Biswajit): add `models:` and `framework:` for the agents you used.
+      tool_setup: >-
+        Original development (sciencenerd-des/reinmann). Large-language-model
+        coding agents were used to write and repair Lean proofs, to generate
+        the numerical tile certificates and their Lean encodings, and for
+        manuscript preparation, under the author's direction. Every accepted
+        proof is checked by the Lean kernel; agent output is trusted only
+        through that check and Comparator.
+    - method: agent
+      framework: "Grok Bot"
+      tool_setup: >-
+        Palomar packaging. An AI agent vendored the import closure of
+        XiRectangle.Final, ported it to Lean's module system with a
+        mechanical script (module header, public import, @[expose] public
+        section), upgraded it to Lean/Mathlib v4.35.0-rc2, and wrote
+        Challenge.lean, Solution.lean, comparator.json and this file for the
+        author's review.
+  notes: >-
+    The mathematical strategy (rational Taylor models on a ball cover,
+    symmetry reduction) is standard validated numerics; no methodological
+    novelty is claimed.
+
+review:
+  status: "self-assessed"
+
+sources:
+  - title: "The Riemann hypothesis is true up to 3*10^12"
+    authors:
+      - "David Platt"
+      - "Timothy Trudgian"
+    id: "doi:10.1112/blms.12460"
+    type: "article"
+    location: "Bulletin of the London Mathematical Society 53 (2021), no. 3, 792-797"
+    relationship: "independently-proves"
+    note: >-
+      Their verification implies both compared statements (all zeros with
+      0 < Im s <= 3*10^12 lie on Re s = 1/2 and the lowest has ordinate
+      14.13...). This formalization independently proves the much weaker
+      low-height statement in Lean; it does not formalize their computation.
+    author_endorsement: "not-contacted"
+  - title: "Split-pair oscillation, the Toeplitz-Jacobi bridge, and Lean-verified finite-order positivity for xi (version 3)"
+    authors:
+      - "Biswajit Mondal"
+    type: "preprint"
+    location: "https://github.com/sciencenerd-des/reinmann (paper/), unreviewed preprint, 22 October 2026"
+    relationship: "background"
+    note: >-
+      The author's own preprint describing the rectangle certificate and its
+      finite-order Polya-frequency applications; not externally reviewed.
+    license: "unknown"
+    author_endorsement: "participated"
+
+related_formalizations:
+  - id: "https://github.com/sciencenerd-des/reinmann/tree/a8455dcf978424a7487048f114df3c66552d6f6a"
+    relationship: "adapts"
+    note: >-
+      The original Lean 4.30 development by the same author. This repository
+      vendors its XiRectangle.Final import closure, ported to the module
+      system and Lean v4.35.0-rc2.
